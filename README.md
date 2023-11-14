@@ -1,6 +1,8 @@
 # How-to-show-different-data-marker-symbol-based-on-conditions-in-Blazor-chart
 
-This KB article explain how to show different data marker symbols based on the conditions in the [Blazor Chart](https://www.syncfusion.com/blazor-components/blazor-charts).
+This KB article explains how to show different data marker symbols based on the conditions in the [Blazor Chart](https://www.syncfusion.com/blazor-components/blazor-charts).
+
+**Marker symbol customization based on Y value using OnPointRender event**
 
 We can show different data marker symbols based on the conditions by using [OnPointRender](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.ChartEvents.html#Syncfusion_Blazor_Charts_ChartEvents_OnPointRender) event. This event triggers before each point for the series is rendered.
 
@@ -25,13 +27,16 @@ The below code example illustrates this.
 ```cshtml
 @using Syncfusion.Blazor.Charts
 
-<SfChart>   
+<SfChart> 
+
     <ChartEvents OnPointRender="@PointRender"></ChartEvents>
+
     <ChartSeriesCollection>
         <ChartSeries DataSource="@ConsumerReports" XName="X" YName="Y" Type="ChartSeriesType.Line">
             <ChartMarker Visible="true" Height="10" Width="10" />
         </ChartSeries>
     </ChartSeriesCollection>
+
 </SfChart>
 
 @code {
@@ -56,6 +61,7 @@ The below code example illustrates this.
         new ChartData{ X= 2014, Y= 35 },
         new ChartData{ X= 2015, Y= 20 }
     };
+    
     public void PointRender(PointRenderEventArgs args)
     {
         if(args.Point.YValue <= 20)
