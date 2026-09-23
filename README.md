@@ -1,105 +1,76 @@
-# How-to-show-different-data-marker-symbol-based-on-conditions-in-Blazor-chart
+# Conditional Data Marker Symbols in Syncfusion Blazor Chart
 
-This KB article explains how to show different data marker symbols based on the conditions in the [Blazor Chart](https://www.syncfusion.com/blazor-components/blazor-charts).
+## Overview
 
-**Marker symbol customization based on Y value using OnPointRender event**
+This sample demonstrates how to customize marker symbols dynamically in Syncfusion [Blazor Charts](https://www.syncfusion.com/blazor-components/blazor-charts) based on individual data point values. The implementation uses the `OnPointRender` event to evaluate each chart point before rendering and applies different marker shapes, fill colors, and border colors according to predefined value thresholds.
 
-We can show different data marker symbols based on the conditions by using [OnPointRender](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.ChartEvents.html#Syncfusion_Blazor_Charts_ChartEvents_OnPointRender) event. This event triggers before each point for the series is rendered.
+By customizing marker symbols based on business conditions, the chart provides immediate visual differentiation between data categories. This technique improves readability and helps users quickly identify trends, exceptions, and threshold-based patterns directly within the chart visualization.
 
-The following properties are available in the [PointRenderEventArgs](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html).
+## Key Features
 
-•	[Border](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Border) – Specifies the color and the width of the point border.
+- Uses the `SfChart` component to render a line chart.
+- Binds data through the `ChartSeries.DataSource` property.
+- Maps data fields using:
+  - `XName`
+  - `YName`
+- Enables marker rendering through:
+  - `ChartMarker.Visible`
+  - `ChartMarker.Height`
+  - `ChartMarker.Width`
+- Handles the `ChartEvents.OnPointRender` event for per-point customization.
+- Uses `PointRenderEventArgs` to modify:
+  - `Shape`
+  - `Fill`
+  - `Border.Color`
+- Customizes marker appearance according to `args.Point.YValue`.
+- Applies the following marker symbols:
+  - `ChartShape.InvertedTriangle`
+  - `ChartShape.Diamond`
+  - `ChartShape.Triangle`
+- Assigns matching fill and border colors for each marker category.
 
-•	[Fill](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Fill) – Specifies the fill color of the point.
+## Prerequisites
 
-•	[Height](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Height) – Specifies the current point’s height.
+- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or [Visual Studio Code](https://code.visualstudio.com/)
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet) compatible with the project's target framework
 
-•	[Shape](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Shape) – Specifies the marker shape of the point.
+## How to Run the Project
 
-•	[Width](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Width) – Specifies the current point’s width.
+**Visual Studio 2022**
 
-We can customize the marker shape  based on Y value by specifying the [Shape](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html#Syncfusion_Blazor_Charts_PointRenderEventArgs_Shape) property of the [PointRenderEventArgs](https://help.syncfusion.com/cr/blazor/Syncfusion.Blazor.Charts.PointRenderEventArgs.html).
+1. Clone or download this repository.
+2. Open the project file:
 
-The below code example illustrates this.
+   `BlazorApp1/BlazorApp1.csproj`
 
-**C#**
+3. Restore NuGet packages.
+4. Build the project.
+5. Press `Ctrl + F5` to run the application.
 
-```cshtml
-@using Syncfusion.Blazor.Charts
+**Visual Studio Code**
 
-<SfChart> 
+1. Open the repository folder in Visual Studio Code.
+2. Open the integrated terminal.
+3. Navigate to the project directory.
 
-    <ChartEvents OnPointRender="@PointRender"></ChartEvents>
-
-    <ChartSeriesCollection>
-        <ChartSeries DataSource="@ConsumerReports" XName="X" YName="Y" Type="ChartSeriesType.Line">
-            <ChartMarker Visible="true" Height="10" Width="10" />
-        </ChartSeries>
-    </ChartSeriesCollection>
-
-</SfChart>
-
-@code {
-    
-    public class ChartData
-    {
-        public double X { get; set; }
-        public double Y { get; set; }
-    }
-
-    public List<ChartData> ConsumerReports = new List<ChartData>
-    {
-        new ChartData{ X= 2005, Y= 25 },
-        new ChartData{ X= 2006, Y= 15 },
-        new ChartData{ X= 2007, Y= 45 },
-        new ChartData{ X= 2008, Y= 30},
-        new ChartData{ X= 2009, Y= 20 },
-        new ChartData{ X= 2010, Y= 35 },
-        new ChartData{ X= 2011, Y= 50 },
-        new ChartData{ X= 2012, Y= 45 },
-        new ChartData{ X= 2013, Y= 25 },
-        new ChartData{ X= 2014, Y= 35 },
-        new ChartData{ X= 2015, Y= 20 }
-    };
-    
-    public void PointRender(PointRenderEventArgs args)
-    {
-        if(args.Point.YValue <= 20)
-        {
-            args.Shape = ChartShape.InvertedTriangle;
-            args.Fill = "red";
-            args.Border.Color = "red";
-        }
-        if(args.Point.YValue >20 && args.Point.YValue < 40)
-        {
-            args.Shape = ChartShape.Diamond;
-            args.Fill = "blue";
-            args.Border.Color = "blue";
-        }
-        if (args.Point.YValue >= 40)
-        {
-            args.Shape = ChartShape.Triangle;
-            args.Fill = "green";
-            args.Border.Color = "green";
-        }
-    }
-}
-
+```bash
+cd BlazorApp1
+dotnet restore
+dotnet run
 ```
-The following screenshot illustrate the output of the above code snippet.
 
-**Output:**
+4. Open the local URL displayed in the terminal after application startup.
 
-![](/different-marker-symbol-based-on-condition.png)
+## Project Structure
 
-**Conclusion**
+`Pages/Index.razor` - Hosts the Syncfusion chart sample demonstrating conditional marker symbol customization.
 
-I hope you enjoyed learning how to show different data marker symbols based on conditions in Blazor Chart Component.
+## Support and Feedback
 
-You can refer to our [Blazor Chart feature tour](https://www.syncfusion.com/blazor-components/blazor-charts) page to know about its other groundbreaking feature representations and [documentation](https://blazor.syncfusion.com/documentation/chart/getting-started), and how to quickly get started for configuration specifications. You can also explore our [Blazor Chart example](https://blazor.syncfusion.com/demos/chart/line?theme=bootstrap5) to understand how to create and manipulate data.
+- For general product questions, visit the [Syncfusion Community Forum](https://www.syncfusion.com/forums) or [Syncfusion Support](https://www.syncfusion.com/support).
+- To report an issue specific to this sample, open a GitHub issue in this repository.
+- Refer to the Syncfusion Chart documentation for event-based customization using `OnPointRender`: https://help.syncfusion.com/chart-sdk/blazor/charts/getting-started
 
-For current customers, you can check out our components from the [License and Downloads](https://www.syncfusion.com/sales/teamlicense) page. If you are new to Syncfusion, you can try our 30-day [free trial](https://www.syncfusion.com/downloads/blazor) to check out our other controls.
+## License
 
-If you have any queries or require clarifications, please let us know in the comments section below. You can also contact us through our [support forums](https://www.syncfusion.com/forums), [Direct-Trac](https://support.syncfusion.com/create), or [feedback portal](https://www.syncfusion.com/feedback/blazor-components?control=charts). We are always happy to assist you!
-
-
+This is a Syncfusion sample project provided to demonstrate product usage. Review the [Syncfusion license terms](https://www.syncfusion.com/sales/pricing?category=ui-components) before using Syncfusion components in your own applications.
